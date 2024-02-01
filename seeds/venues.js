@@ -9,7 +9,7 @@ exports.seed = async function(knex) {
     {
       id: 1, 
       venue_name: 'BMO Field',
-      address: '170 Princes Blvd, Toronto, ON M6K 3C3',
+      address: "170 Princes' Blvd, Toronto, ON M6K 3C3",
       image_path: '/public/BMOfield.JPG',
     },
     {
