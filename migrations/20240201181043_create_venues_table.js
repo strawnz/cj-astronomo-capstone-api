@@ -20,6 +20,6 @@ exports.up = function(knex) {
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
-exports.down = function(knex) {
-  return knex.schema.dropTable("venues");
+exports.down = async function (knex) {
+  await knex.schema.dropTableIfExists("venues")
 };
