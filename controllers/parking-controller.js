@@ -9,6 +9,18 @@ const parkingAll = async (_req, res) => {
   }
 }
 
+const parkingFromVenueId = async (req, res) => {
+  const { venue_id: venueId } = req.query;
+  try {
+    const parkingOptions = await knex('parking')
+    .where({ venue_id: venueId });
+    res.status(200).json(parkingOptions);
+  } catch(err) {
+    res.status(500).send(`Error retrieving Parking options: ${err}`)
+  }
+}
+
 module.exports = {
-  parkingAll
+  parkingAll,
+  parkingFromVenueId
 }
