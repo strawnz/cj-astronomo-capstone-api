@@ -34,7 +34,48 @@ const addForm = async (req, res) => {
     }
 };
 
+const chooseParking = async (req, res) => {
+  try {
+    const { parking_id: parkingId } = req.body;
+
+    console.log('Request Body: ', req.body)
+
+    if(!parkingId) {
+      return res
+      .status(400)
+      .json({message: `Missing 'parking_id' in request body`});
+    }
+
+    const formDetails = await knex("forms")
+    .where({parking_id: parkingId})
+    .first();
+
+    console.log('Form Details: ', formDetails);
+
+    if(!formDetails) {
+      return res.status(404).json({
+        message: `Form details not found for parking ID: ${parkingId}`,
+      });
+    }
+
+    const formData = {
+      venue_name: formDetails.venue_name,
+      event_date: formDetails.event_date,
+      preferred_time: formDetails.preferred_time,
+      option_parking: formDetails.option_parking,
+      option_restaurant: formDetails.option_restaurant,
+      option_price: formDetails.option_price,
+      parking_id: parkingId,
+    };
+    res.status(201).send(formData);
+  } catch (error) {
+    console.error(error);
+    return res.status(400).json({ message: "Could not add parking choice", error});
+  }
+}
+
 module.exports = {
   formsAll,
-  addForm
+  addForm,
+  chooseParking
 }
