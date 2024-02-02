@@ -7,8 +7,8 @@ exports.up = function(knex) {
     .createTable("forms", (table) => {
       table.increments("id").primary();
       table.string("venue_name").notNullable();
-      table.date("event_date").notNullable();
-      table.timestamp("preferred_time").notNullable();
+      table.datetime("event_date").notNullable();
+      table.time("preferred_time").notNullable();
       table.string("option_parking").notNullable();
       table.string("option_restaurant").notNullable();
       table.string("option_price").notNullable();
