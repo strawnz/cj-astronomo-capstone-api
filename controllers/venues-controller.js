@@ -31,7 +31,37 @@ const venueIdFromName = async (req, res) => {
   }
 };
 
+const venuesSingle = async (req, res) => {
+  try {
+    const venueId = req.params.venueId;
+
+    const venue = await knex("venues")
+    .where( "id", "=", venueId )
+    .select([
+      "id",
+      "venue_name",
+      "address",
+      "image_path",
+    ]);
+
+  if (venue.length === 0) {
+    return res.status(404).json({
+      message: `Venue with ID ${req.params.id} not found`
+    });
+  }
+
+  const venueData = venue[0];
+  res.json(venueData);
+  } catch (error) {
+    console.log("venuesSingle error: ", error);
+    res.status(500).json({
+      message: `Unable to retrieve data for venue with ID ${req.params.id}`
+    })
+  }
+}
+
 module.exports = {
   venuesAll,
-  venueIdFromName
+  venueIdFromName, 
+  venuesSingle
 }
