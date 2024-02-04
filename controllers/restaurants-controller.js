@@ -17,8 +17,8 @@ const restaurantsSingleByVenue = async (req, res) => {
       .select([
         "restos_venues.resto_id",
         "restaurants.restaurant_name",
+        "restaurants.address",
         "restaurants.cuisine",
-        "restaurants.website",
         "restaurants.website",
         "restos_venues.distance_venue",
         "restos_venues.duration_venue",
