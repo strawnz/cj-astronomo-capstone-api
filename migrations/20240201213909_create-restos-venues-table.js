@@ -8,6 +8,7 @@ exports.up = function(knex) {
       table.increments("id").primary();
       table.integer("resto_id").unsigned();
       table.integer("venue_id").unsigned();
+      table.string("price_level").notNullable();
       table.integer("distance_venue").unsigned();
       table.integer("duration_venue").unsigned();
       table
