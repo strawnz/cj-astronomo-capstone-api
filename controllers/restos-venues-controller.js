@@ -9,18 +9,24 @@ const restosVenuesAll = async (_req, res) => {
   }
 }
 
-const restosFromVenueId = async (req, res) => {
-  const { venue_id: venueId } = req.query;
+const restosFromVenueIdPriceChoice = async (req, res) => {
+  const { venue_id: venueId, price_level: priceLevel } = req.query;
   try {
-    const restoOptions = await knex('restos_venues')
-    .where({ venue_id: venueId });
+    let query = knex('restos_venues').where({ venue_id: venueId });
+    
+    if (priceLevel) {
+      query = query.where({ price_level: priceLevel });
+    }
+
+    const restoOptions = await query;
+    
     res.status(200).json(restoOptions);
   } catch(err) {
-    res.status(500).send(`Error retrieving Restaurants by Venue ID options: ${err}`)
+    res.status(500).send(`Error retrieving Restaurants by Venue ID and Price Leveloptions: ${err}`)
   }
 }
 
 module.exports = {
   restosVenuesAll, 
-  restosFromVenueId
+  restosFromVenueIdPriceChoice
 }
