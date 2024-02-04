@@ -9,6 +9,38 @@ const restaurantsAll = async (_req, res) => {
   }
 }
 
+const restaurantsSingleByVenue = async (req, res) => {
+  try {
+    const singleResto = await knex("restaurants")
+      .join("restos_venues", "restaurants.id", "restos_venues.resto_id")
+      .where( {"restaurants.id": req.params.restoId } )
+      .select([
+        "restos_venues.resto_id",
+        "restaurants.restaurant_name",
+        "restaurants.cuisine",
+        "restaurants.website",
+        "restaurants.website",
+        "restos_venues.distance_venue",
+        "restos_venues.duration_venue",
+      ]);
+
+    if (singleResto.length === 0) {
+      return res.status(404).json({
+        message: `Restaurant with ID ${req.params.restoId} not found`
+      });
+    }
+
+    const restoData = singleResto[0];
+    res.json(restoData);
+  } catch (error) {
+    console.log("restaurantsSingle error: ", error);
+    res.status(500).json({
+      message: `Unable to retrieve data for restaurant with ID ${req.params.restoId}`
+    })
+  }
+}
+
 module.exports = {
-  restaurantsAll
+  restaurantsAll,
+  restaurantsSingleByVenue
 }
