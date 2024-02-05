@@ -106,11 +106,31 @@ const storedForm = async (req, res) => {
 
 const updateForm = async (req, res) => {
   try {
-    const formId = req.params.formId;
-    const { event_date, updated_at, ...rest } = req.body;
+      const formId = req.params.formId;
+      const { event_date, updated_at, ...rest } = req.body;
 
-    const formattedEventDate = event_date ? formatISO(new Date(event_date)) : null;
-    const formattedUpdateDate = updated_at ? formatISO(new Date(updated_at)) : null;
+      const eventObject = new Date(event_date);
+
+      const formattedDate = eventObject.toLocaleDateString('en-CA', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+    });
+    console.log('event formattedDate: ', formattedDate);
+
+    const formattedTime = eventObject.toLocaleTimeString('en-CA', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+    });
+    console.log('event formattedTime: ', formattedTime);
+
+    const formattedEventDate = `${formattedDate} ${formattedTime}`;
+    // const formattedEventDate = new Date(event_date).toISOString();
+    // console.log(formattedEventDate);
+    // const formattedUpdateDate = new Date(updated_at).toISOString();
+    // console.log(formattedUpdateDate);
 
     const updateColumns = {
       venue_name: rest.venue_name,
@@ -119,7 +139,6 @@ const updateForm = async (req, res) => {
       option_parking: rest.option_parking,
       option_restaurant: rest.option_restaurant,
       option_price: rest.option_price,
-      updated_at: formattedUpdateDate,
       parking_id: rest.parking_id,
       resto_id: rest.resto_id,
       venue_id: rest.venue_id
@@ -130,6 +149,7 @@ const updateForm = async (req, res) => {
     .update(updateColumns);
     res.status(200).json(data);
   } catch (error) {
+    console.log('Error updating form: ', error);
     res.status(500).send(`Error updating form: ${error}`);
   }
 }
