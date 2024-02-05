@@ -46,9 +46,27 @@ const lastUpdatedForm = async (_req, res) => {
       return res.status(404).json({ message: 'Latest form not found' });
     }
 
-    res.status(200).json(latestForm);
+    const venueInfo = await knex('venues')
+    .select('id', 'venue_name', 'address', 'image_path')
+    .where('venue_name', latestForm.venue_name)
+    .first();
+
+    const parkingRestoInfo = await knex('parking_restos')
+    .select('distance_resto', 'duration_resto')
+    .where('parking_id', latestForm.parking_id)
+    .andWhere('resto_id', latestForm.resto_id)
+    .first();
+
+    const result = {
+      latest_form: latestForm,
+      venue_info: venueInfo,
+      parking_restos_info: parkingRestoInfo,
+    }
+
+    res.status(200).json(result);
   } catch (error) {
-    res.status(500).send("Error retrieving last updated form: ", error);
+    console.log(error);
+    res.status(500).send(`Error retrieving last updated form: ${error}`);
   }
 };
 
