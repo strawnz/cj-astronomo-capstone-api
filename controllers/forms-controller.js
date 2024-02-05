@@ -37,7 +37,7 @@ const addForm = async (req, res) => {
 const lastUpdatedForm = async (_req, res) => {
   try {
     const latestForm = await knex('forms')
-      .select('venue_name', 'event_date', 'preferred_time', 'parking_id', 'resto_id')
+      .select('venue_name', 'event_date', 'preferred_time', 'parking_id', 'resto_id', 'venue_id')
       .orderBy('updated_at', 'desc')
       .limit(1)
       .first();

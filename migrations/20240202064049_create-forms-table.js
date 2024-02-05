@@ -14,6 +14,7 @@ exports.up = function(knex) {
       table.string("option_price").notNullable();
       table.integer("parking_id").unsigned();
       table.integer("resto_id").unsigned();
+      table.integer("venue_id").unsigned();
       table
         .foreign("parking_id")
         .references("id")
@@ -24,6 +25,12 @@ exports.up = function(knex) {
         .foreign("resto_id")
         .references("id")
         .inTable("restaurants")
+        .onUpdate("CASCADE")
+        .onDelete("CASCADE");
+      table
+        .foreign("venue_id")
+        .references("id")
+        .inTable("venues")
         .onUpdate("CASCADE")
         .onDelete("CASCADE");
       table.timestamp("created_at").defaultTo(knex.fn.now());
