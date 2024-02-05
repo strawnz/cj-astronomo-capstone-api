@@ -57,16 +57,23 @@ const lastUpdatedForm = async (_req, res) => {
     .andWhere('resto_id', latestForm.resto_id)
     .first();
 
+    const restoVenueInfo = await knex('restos_venues')
+    .select('distance_venue', 'duration_venue')
+    .where('resto_id', latestForm.resto_id)
+    .andWhere('venue_id', latestForm.venue_id)
+    .first();
+
     const result = {
       latest_form: latestForm,
       venue_info: venueInfo,
-      parking_restos_info: parkingRestoInfo,
+      parking_resto_info: parkingRestoInfo,
+      resto_venue_info: restoVenueInfo
     }
 
     res.status(200).json(result);
   } catch (error) {
     console.log(error);
-    res.status(500).send(`Error retrieving last updated form: ${error}`);
+    res.status(500).send(`Error retrieving last updated form info: ${error}`);
   }
 };
 
