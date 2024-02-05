@@ -1,4 +1,5 @@
 const knex = require('knex')(require('../knexfile'));
+const { formatISO } = require('date-fns');
 
 const formsAll = async (_req, res) => {
   try {
@@ -38,7 +39,7 @@ const addForm = async (req, res) => {
 const lastUpdatedForm = async (_req, res) => {
   try {
     const latestForm = await knex('forms')
-      .select('venue_name', 'event_date', 'preferred_time', 'parking_id', 'resto_id', 'venue_id')
+      .select('id', 'venue_name', 'event_date', 'preferred_time', 'parking_id', 'resto_id', 'venue_id')
       .orderBy('updated_at', 'desc')
       .limit(1)
       .first();
@@ -97,9 +98,39 @@ const storedForm = async (req, res) => {
     const data = await knex('forms')
     .select('*')
     .where('id', formId); 
-    res.status(200).json(data);
+    res.status(200).json(data[0]);
   } catch (error) {
     res.status(500).send(`Error retrieving stored form: ${error}`);
+  }
+}
+
+const updateForm = async (req, res) => {
+  try {
+    const formId = req.params.formId;
+    const { event_date, updated_at, ...rest } = req.body;
+
+    const formattedEventDate = event_date ? formatISO(new Date(event_date)) : null;
+    const formattedUpdateDate = updated_at ? formatISO(new Date(updated_at)) : null;
+
+    const updateColumns = {
+      venue_name: rest.venue_name,
+      event_date: formattedEventDate,
+      preferred_time: rest.preferred_time,
+      option_parking: rest.option_parking,
+      option_restaurant: rest.option_restaurant,
+      option_price: rest.option_price,
+      updated_at: formattedUpdateDate,
+      parking_id: rest.parking_id,
+      resto_id: rest.resto_id,
+      venue_id: rest.venue_id
+    }
+
+    const data = await knex('forms')
+    .where('id', formId)
+    .update(updateColumns);
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).send(`Error updating form: ${error}`);
   }
 }
 
@@ -107,5 +138,6 @@ module.exports = {
   formsAll,
   addForm,
   lastUpdatedForm,
-  storedForm
+  storedForm, 
+  updateForm
 }
