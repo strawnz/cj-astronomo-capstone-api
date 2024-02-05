@@ -27,8 +27,9 @@ const addForm = async (req, res) => {
                     .json({message: `Missing '${field}' in request body`});
             }
         }
-        await knex("forms").insert(newForm);
-        res.status(201).send(newForm);
+        const submittedForm = await knex("forms").insert(newForm);
+        console.log(submittedForm);
+        res.status(201).send(submittedForm);
     } catch (error) {
         return res.status(400).json({ message: "Could not add new form", error});
     }
@@ -89,8 +90,22 @@ const lastUpdatedForm = async (_req, res) => {
   }
 };
 
+const storedForm = async (req, res) => {
+  try {
+    const formId = req.params.formId;
+
+    const data = await knex('forms')
+    .select('*')
+    .where('id', formId); 
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).send(`Error retrieving stored form: ${error}`);
+  }
+}
+
 module.exports = {
   formsAll,
   addForm,
-  lastUpdatedForm
+  lastUpdatedForm,
+  storedForm
 }
