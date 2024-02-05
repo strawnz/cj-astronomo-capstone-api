@@ -3,6 +3,6 @@ const formController = require('../controllers/forms-controller');
 
 router.route('/').get(formController.formsAll);
 router.route('/').post(formController.addForm);
-router.route('/parking').post(formController.chooseParking);
+router.route('/last-updated').get(formController.lastUpdatedForm);
 
 module.exports = router;

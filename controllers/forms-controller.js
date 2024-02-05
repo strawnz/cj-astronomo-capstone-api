@@ -34,48 +34,26 @@ const addForm = async (req, res) => {
     }
 };
 
-const chooseParking = async (req, res) => {
+const lastUpdatedForm = async (_req, res) => {
   try {
-    const { parking_id: parkingId } = req.body;
+    const latestForm = await knex('forms')
+      .select('venue_name', 'event_date', 'preferred_time', 'parking_id', 'resto_id')
+      .orderBy('updated_at', 'desc')
+      .limit(1)
+      .first();
 
-    console.log('Request Body: ', req.body)
-
-    if(!parkingId) {
-      return res
-      .status(400)
-      .json({message: `Missing 'parking_id' in request body`});
+    if (!latestForm) {
+      return res.status(404).json({ message: 'Latest form not found' });
     }
 
-    const formDetails = await knex("forms")
-    .where({parking_id: parkingId})
-    .first();
-
-    console.log('Form Details: ', formDetails);
-
-    if(!formDetails) {
-      return res.status(404).json({
-        message: `Form details not found for parking ID: ${parkingId}`,
-      });
-    }
-
-    const formData = {
-      venue_name: formDetails.venue_name,
-      event_date: formDetails.event_date,
-      preferred_time: formDetails.preferred_time,
-      option_parking: formDetails.option_parking,
-      option_restaurant: formDetails.option_restaurant,
-      option_price: formDetails.option_price,
-      parking_id: parkingId,
-    };
-    res.status(201).send(formData);
+    res.status(200).json(latestForm);
   } catch (error) {
-    console.error(error);
-    return res.status(400).json({ message: "Could not add parking choice", error});
+    res.status(500).send("Error retrieving last updated form: ", error);
   }
-}
+};
 
 module.exports = {
   formsAll,
   addForm,
-  chooseParking
+  lastUpdatedForm
 }
