@@ -14,6 +14,7 @@ const formRoutes = require('./routes/form-routes');
 
 app.use(cors({origin: "http://localhost:3000"}));
 app.use(express.json());
+app.use('/public', express.static('./public'));
 
 app.use('/api/venues', venueRoutes);
 app.use('/api/restaurants', restaurantRoutes);
