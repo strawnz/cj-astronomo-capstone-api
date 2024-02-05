@@ -63,11 +63,23 @@ const lastUpdatedForm = async (_req, res) => {
     .andWhere('venue_id', latestForm.venue_id)
     .first();
 
+    const parkingInfo = await knex('parking')
+    .select('id', 'address')
+    .where('id', latestForm.parking_id)
+    .first();
+
+    const restoInfo = await knex('restaurants')
+    .select('id', 'restaurant_name', 'address')
+    .where('id', latestForm.resto_id)
+    .first();
+
     const result = {
       latest_form: latestForm,
       venue_info: venueInfo,
       parking_resto_info: parkingRestoInfo,
-      resto_venue_info: restoVenueInfo
+      resto_venue_info: restoVenueInfo,
+      parking_info: parkingInfo,
+      resto_info: restoInfo
     }
 
     res.status(200).json(result);
