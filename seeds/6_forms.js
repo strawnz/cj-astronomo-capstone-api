@@ -14,6 +14,9 @@ exports.seed = async function(knex) {
       option_parking: 'yes',
       option_restaurant: 'yes',
       option_price: '$$',
+      parking_id: 1, 
+      resto_id: 1,
+      venue_id: 1,
     },
   ]);
 };

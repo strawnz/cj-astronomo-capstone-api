@@ -27,7 +27,6 @@ const addForm = async (req, res) => {
       }
     }
     const submittedForm = await knex("forms").insert(newForm);
-    console.log(submittedForm);
     res.status(201).send(submittedForm);
   } catch (error) {
     return res.status(400).json({ message: "Could not add new form", error });
@@ -122,7 +121,6 @@ const updateForm = async (req, res) => {
       month: "2-digit",
       day: "2-digit",
     });
-    console.log("event formattedDate: ", formattedDate);
 
     const formattedTime = eventObject.toLocaleTimeString("en-CA", {
       hour: "2-digit",
@@ -130,13 +128,8 @@ const updateForm = async (req, res) => {
       second: "2-digit",
       hour12: false,
     });
-    console.log("event formattedTime: ", formattedTime);
 
     const formattedEventDate = `${formattedDate} ${formattedTime}`;
-    // const formattedEventDate = new Date(event_date).toISOString();
-    // console.log(formattedEventDate);
-    // const formattedUpdateDate = new Date(updated_at).toISOString();
-    // console.log(formattedUpdateDate);
 
     const updateColumns = {
       venue_name: rest.venue_name,
