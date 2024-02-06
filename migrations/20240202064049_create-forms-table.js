@@ -11,7 +11,7 @@ exports.up = function(knex) {
       table.time("preferred_time").notNullable();
       table.string("option_parking").notNullable();
       table.string("option_restaurant").notNullable();
-      table.string("option_price").notNullable();
+      table.string("option_price");
       table.integer("parking_id").unsigned();
       table.integer("resto_id").unsigned();
       table.integer("venue_id").unsigned();

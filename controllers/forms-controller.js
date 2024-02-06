@@ -18,7 +18,6 @@ const addForm = async (req, res) => {
       "preferred_time",
       "option_parking",
       "option_restaurant",
-      "option_price",
     ];
     for (const field of requiredFields) {
       if (!newForm[field]) {
