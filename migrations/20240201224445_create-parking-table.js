@@ -10,7 +10,12 @@ exports.up = function(knex) {
       table.integer("venue_id").unsigned();
       table.integer("distance_venue").unsigned();
       table.integer("duration_venue").unsigned();
-      table.foreign("venue_id").references("id").inTable("venues");
+      table
+      .foreign("venue_id")
+      .references("id")
+      .inTable("venues")
+      .onUpdate("CASCADE")
+      .onDelete("CASCADE");
       table.timestamp("created_at").defaultTo(knex.fn.now()); 
       table
         .timestamp("updated_at")

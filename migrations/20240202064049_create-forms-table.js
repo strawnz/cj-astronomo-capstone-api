@@ -4,13 +4,23 @@
  */
 exports.up = function(knex) {
     return knex.schema
-    .createTable("restos_venues", (table) => {
+    .createTable("forms", (table) => {
       table.increments("id").primary();
+      table.string("venue_name").notNullable();
+      table.datetime("event_date").notNullable();
+      table.time("preferred_time").notNullable();
+      table.string("option_parking").notNullable();
+      table.string("option_restaurant").notNullable();
+      table.string("option_price");
+      table.integer("parking_id").unsigned();
       table.integer("resto_id").unsigned();
       table.integer("venue_id").unsigned();
-      table.string("price_level").notNullable();
-      table.integer("distance_venue").unsigned();
-      table.integer("duration_venue").unsigned();
+      table
+        .foreign("parking_id")
+        .references("id")
+        .inTable("parking")
+        .onUpdate("CASCADE")
+        .onDelete("CASCADE");
       table
         .foreign("resto_id")
         .references("id")
@@ -35,5 +45,5 @@ exports.up = function(knex) {
  * @returns { Promise<void> }
  */
 exports.down = async function (knex) {
-    await knex.schema.dropTableIfExists("restos_venues")
+  await knex.schema.dropTableIfExists("forms")
 };
